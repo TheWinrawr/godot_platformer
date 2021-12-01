@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://src/gui/TerminalText.gd" type="Script" id=2]
+[ext_resource path="res://src/gui/ScrollingText.tscn" type="PackedScene" id=3]
+
+[node name="TerminalText" type="Node2D"]
+script = ExtResource( 2 )
+messages = "load ENTITY.BLOCK
+load \"icon.png\"
+set Player.INPUT = INPUT_HANDLER
+load ENTITY @0x23bd8f10
+spawn ENTITY(130, 0xc3bf3daf)
+spawn 0x4b3def(30, 1, NULL)
+WRITE DATA @ FILE 0x3bf3afed
+load LEVEL(LEVEL_GODOT, \"godot.tscn\")
+FILE(\"tiles.tres\", NULL)
+FILE(\"block.tres\", TRUE)
+FILE(\"font.tres\", \"FONT_CONSOLATAS\")
+ERROR: Memory leak @0xb7714ef2: leaked 64 bytes at position 0x87539319
+ERROR: Memory leak @0xb7724adf: leaked 16 bytes at position 0x10ef93c9
+ERROR: Memory leak @0x145c4ff2: leaked 64 bytes at position 0x725a9cd9
+ERROR: Memory leak @0x14dc4ae1: leaked 32 bytes at position 0x22cabfd9
+AUTOLOAD \"GameManger.tscn\" GAME_MANAGER
+AUTOLOAD \"GODOT_SINGLETON.tscn\" TRUE"
+
+[node name="ScrollingText" parent="." instance=ExtResource( 3 )]
+
+[connection signal="queue_emptied" from="ScrollingText" to="." method="_on_ScrollingText_queue_emptied"]

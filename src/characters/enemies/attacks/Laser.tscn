@@ -1,0 +1,80 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://src/characters/enemies/attacks/Laser.gd" type="Script" id=1]
+[ext_resource path="res://assets/sprites/projectiles/laser.png" type="Texture" id=2]
+[ext_resource path="res://src/shaders/glitch.shader" type="Shader" id=3]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 3 )
+shader_param/shake_power = 0.4
+shader_param/shake_rate = 10.0
+shader_param/n_stripes = 10.0
+shader_param/chromatic_aberration = 0.08
+shader_param/rgb_opacity = 1.0
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 5.72165, 320.486 )
+
+[sub_resource type="Curve" id=3]
+_data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=4]
+curve = SubResource( 3 )
+
+[sub_resource type="ParticlesMaterial" id=5]
+emission_shape = 2
+emission_box_extents = Vector3( 8, 320, 1 )
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 2.0
+scale_curve = SubResource( 4 )
+hue_variation = 0.12
+hue_variation_random = 1.0
+
+[node name="Laser" type="Area2D" groups=[
+"enemy_projectile",
+]]
+position = Vector2( 116.542, 14.8651 )
+collision_layer = 0
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+visible = false
+material = SubResource( 1 )
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 0, 2, 12, 640 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource( 2 )
+disabled = true
+
+[node name="Windup" type="Node2D" parent="."]
+modulate = Color( 1, 1, 1, 0 )
+
+[node name="Line2D" type="Line2D" parent="Windup"]
+points = PoolVector2Array( 0, -320, 0, 320 )
+width = 1.0
+default_color = Color( 1, 1, 1, 1 )
+
+[node name="Particles2D" type="Particles2D" parent="Windup"]
+amount = 96
+visibility_rect = Rect2( -8, -320, 16, 640 )
+process_material = SubResource( 5 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="FreeTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="body_entered" from="." to="." method="_on_Laser_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="timeout" from="FreeTimer" to="." method="_on_FreeTimer_timeout"]

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/enemy_killed.wav-a1528fe93fdd18b168a31fc2d0a67614.sample"
+
+[deps]
+
+source_file="res://assets/audio/sfx/enemy_killed.wav"
+dest_files=[ "res://.import/enemy_killed.wav-a1528fe93fdd18b168a31fc2d0a67614.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

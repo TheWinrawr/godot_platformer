@@ -1,0 +1,114 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://src/resources/bg_tiles.tres" type="TileSet" id=1]
+[ext_resource path="res://assets/sprites/environment/glitch_block.png" type="Texture" id=2]
+[ext_resource path="res://src/environment/GlitchTilemap.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/shaders/glitch.shader" type="Shader" id=4]
+[ext_resource path="res://src/gui/ScrollingText.tscn" type="PackedScene" id=5]
+[ext_resource path="res://assets/sprites/characters/goo_creature.png" type="Texture" id=6]
+[ext_resource path="res://src/characters/enemies/FloorMonster.tscn" type="PackedScene" id=7]
+[ext_resource path="res://src/characters/enemies/FlyingMonster.tscn" type="PackedScene" id=8]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float cell_size : hint_range(0.0003, 1.0) = 0.5;
+uniform float fade_time : hint_range(0.1, 10.0) = 4.0;
+uniform float max_brightness : hint_range(0.0, 1.0) = 0.03;
+uniform float cell_frequency : hint_range(0.0, 1.0) = 1.0;
+
+float hash11(float p) {
+    p = fract(p * .1031);
+    p *= p + 33.33;
+    p *= p + p;
+    return fract(p);
+}
+
+float hash21(vec2 p) {
+	vec3 p3  = fract(vec3(p.xyx) * .1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
+}
+
+void fragment() {
+	float t = TIME / fade_time + 30.0;
+	vec2 ipos = floor(UV / cell_size);
+	float t_cell = hash21(ipos) + t;
+
+	vec3 color = vec3(hash21(ipos + hash11(floor(t_cell))));
+	color *= max_brightness;
+	color -= max_brightness * (1.0 - cell_frequency);
+	color = mix(color, vec3(0.0), fract(t_cell));
+	COLOR = vec4(color, 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+shader = SubResource( 1 )
+shader_param/cell_size = 0.02
+shader_param/fade_time = 4.0
+shader_param/max_brightness = 0.088
+shader_param/cell_frequency = 0.814
+
+[sub_resource type="ShaderMaterial" id=3]
+shader = ExtResource( 4 )
+shader_param/shake_power = 0.1
+shader_param/shake_rate = 1.0
+shader_param/n_stripes = 20.0
+shader_param/chromatic_aberration = 0.1
+shader_param/rgb_opacity = 1.0
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = ExtResource( 4 )
+shader_param/shake_power = 0.01
+shader_param/shake_rate = 1.805
+shader_param/n_stripes = 80.0
+shader_param/chromatic_aberration = 0.001
+shader_param/rgb_opacity = 1.0
+
+[node name="Sandbox" type="Node2D"]
+
+[node name="Sprite" type="ColorRect" parent="."]
+material = SubResource( 2 )
+margin_left = -24.0
+margin_top = -32.0
+margin_right = 476.0
+margin_bottom = 468.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 1 )
+collision_layer = 2
+collision_mask = 0
+format = 1
+tile_data = PoolIntArray( 65536, 1, 0, 131072, 1, 0, 131073, 1, 0, 131074, 1, 0 )
+
+[node name="Sprite2" type="Sprite" parent="."]
+visible = false
+material = SubResource( 3 )
+position = Vector2( 136, 80 )
+texture = ExtResource( 2 )
+
+[node name="GlitchTilemap" parent="." instance=ExtResource( 3 )]
+visible = false
+
+[node name="ScrollingText" parent="." instance=ExtResource( 5 )]
+visible = false
+
+[node name="Sprite3" type="Sprite" parent="."]
+visible = false
+material = SubResource( 4 )
+position = Vector2( 160, 96 )
+texture = ExtResource( 6 )
+
+[node name="FloorMonster" parent="." instance=ExtResource( 7 )]
+position = Vector2( 94.7692, 123.051 )
+
+[node name="FloorMonster2" parent="." instance=ExtResource( 7 )]
+position = Vector2( 156.311, 123.051 )
+
+[node name="FlyingMonster" parent="." instance=ExtResource( 8 )]
+position = Vector2( 119.38, 39.4223 )
+init_degree = 90.0
+dir = -1

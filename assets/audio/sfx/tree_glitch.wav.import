@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/tree_glitch.wav-b5a8cbab3e65c38483d8611b905509bd.sample"
+
+[deps]
+
+source_file="res://assets/audio/sfx/tree_glitch.wav"
+dest_files=[ "res://.import/tree_glitch.wav-b5a8cbab3e65c38483d8611b905509bd.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

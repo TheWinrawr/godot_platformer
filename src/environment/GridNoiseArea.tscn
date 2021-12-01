@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/shaders/grid_noise.shader" type="Shader" id=1]
+[ext_resource path="res://src/environment/GridNoiseArea.gd" type="Script" id=2]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 1 )
+shader_param/cell_size = 0.5
+shader_param/fade_time = 4.0
+shader_param/max_brightness = 0.08
+shader_param/cell_frequency = 1.0
+
+[node name="GridNoiseArea" type="ColorRect"]
+material = SubResource( 1 )
+margin_right = 500.0
+margin_bottom = 500.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

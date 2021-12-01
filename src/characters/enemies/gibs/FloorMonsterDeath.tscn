@@ -1,0 +1,62 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://src/shaders/glitch.shader" type="Shader" id=1]
+[ext_resource path="res://assets/sprites/characters/floor_monster.png" type="Texture" id=2]
+[ext_resource path="res://src/characters/enemies/gibs/FloorMonsterDeath.gd" type="Script" id=3]
+[ext_resource path="res://assets/audio/sfx/enemy_killed.wav" type="AudioStream" id=4]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 1 )
+shader_param/shake_power = 0.02
+shader_param/shake_rate = 4.0
+shader_param/n_stripes = 20.0
+shader_param/chromatic_aberration = 0.02
+shader_param/rgb_opacity = 1.0
+
+[sub_resource type="Curve" id=2]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=3]
+curve = SubResource( 2 )
+
+[sub_resource type="ParticlesMaterial" id=4]
+emission_shape = 2
+emission_box_extents = Vector3( 5, 1, 1 )
+flag_disable_z = true
+gravity = Vector3( 0, -200, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 2.0
+scale_curve = SubResource( 3 )
+hue_variation = -0.14
+hue_variation_random = 1.0
+
+[node name="FloorMonsterDeath" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 1 )
+texture = ExtResource( 2 )
+hframes = 2
+
+[node name="Particles2D" type="Particles2D" parent="."]
+emitting = false
+amount = 16
+lifetime = 1.5
+one_shot = true
+explosiveness = 0.5
+process_material = SubResource( 4 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 2.5
+one_shot = true
+autostart = true
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 4 )
+autoplay = true
+bus = "SFX"
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

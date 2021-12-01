@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/sprites/environment/coin.png" type="Texture" id=1]
+[ext_resource path="res://assets/audio/sfx/coin.wav" type="AudioStream" id=2]
+[ext_resource path="res://src/environment/Coin.gd" type="Script" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 3.29049, 3.45883 )
+
+[node name="Coin" type="Area2D"]
+collision_layer = 0
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="CollectSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 2 )
+bus = "SFX"
+
+[connection signal="body_entered" from="." to="." method="_on_Coin_body_entered"]

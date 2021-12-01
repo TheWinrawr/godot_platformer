@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/gui/ScrollingText.gd" type="Script" id=1]
+[ext_resource path="res://src/resources/bg_font.tres" type="DynamicFont" id=2]
+[ext_resource path="res://assets/audio/sfx/terminal_type.wav" type="AudioStream" id=3]
+
+[node name="ScrollingText" type="Control"]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MessageTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Label" type="Label" parent="."]
+margin_right = 40.0
+margin_bottom = 14.0
+custom_fonts/font = ExtResource( 2 )
+text = "SCROLLING TEXT HERE"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Blip" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+bus = "SFX"
+
+[connection signal="timeout" from="MessageTimer" to="." method="_on_MessageTimer_timeout"]

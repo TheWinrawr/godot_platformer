@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/dark_ambience.ogg-f606e2b4df4067a9d42dbb6f8ca90620.oggstr"
+
+[deps]
+
+source_file="res://assets/audio/music/dark_ambience.ogg"
+dest_files=[ "res://.import/dark_ambience.ogg-f606e2b4df4067a9d42dbb6f8ca90620.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

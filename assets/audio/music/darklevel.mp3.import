@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/darklevel.mp3-24e17446b423d49fec33453365db1bea.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/music/darklevel.mp3"
+dest_files=[ "res://.import/darklevel.mp3-24e17446b423d49fec33453365db1bea.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

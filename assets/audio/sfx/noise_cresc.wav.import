@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/noise_cresc.wav-cfd247bd8ab8ae9e6e0e8461ad158c54.sample"
+
+[deps]
+
+source_file="res://assets/audio/sfx/noise_cresc.wav"
+dest_files=[ "res://.import/noise_cresc.wav-cfd247bd8ab8ae9e6e0e8461ad158c54.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

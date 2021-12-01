@@ -1,0 +1,196 @@
+[gd_scene load_steps=27 format=2]
+
+[ext_resource path="res://assets/sprites/characters/player.png" type="Texture" id=1]
+[ext_resource path="res://src/characters/player/Player.gd" type="Script" id=2]
+[ext_resource path="res://src/characters/player/states/WallslideState.gd" type="Script" id=3]
+[ext_resource path="res://src/characters/player/states/IdleState.gd" type="Script" id=4]
+[ext_resource path="res://src/characters/player/states/WalkState.gd" type="Script" id=5]
+[ext_resource path="res://src/characters/player/states/AirState.gd" type="Script" id=6]
+[ext_resource path="res://src/characters/player/states/JumpState.gd" type="Script" id=7]
+[ext_resource path="res://src/characters/player/PlayerFSM.gd" type="Script" id=8]
+[ext_resource path="res://src/characters/player/PlayerInput.gd" type="Script" id=9]
+[ext_resource path="res://src/characters/player/states/WalljumpState.gd" type="Script" id=10]
+[ext_resource path="res://src/characters/player/states/Freeze.gd" type="Script" id=11]
+[ext_resource path="res://src/shaders/glitch_screen.shader" type="Shader" id=12]
+[ext_resource path="res://src/characters/player/Hurtbox.gd" type="Script" id=13]
+[ext_resource path="res://assets/audio/sfx/jump_happy.wav" type="AudioStream" id=14]
+[ext_resource path="res://assets/audio/sfx/jump_nothappy.wav" type="AudioStream" id=15]
+[ext_resource path="res://assets/audio/sfx/player_death.wav" type="AudioStream" id=16]
+[ext_resource path="res://assets/audio/sfx/player_hit.wav" type="AudioStream" id=17]
+[ext_resource path="res://assets/audio/sfx/player_heal.wav" type="AudioStream" id=18]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 3, 4 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 2.9, 4.1 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 3.1, 3.9 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 3, 4 )
+
+[sub_resource type="Animation" id=5]
+length = 2.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.1, 2.2, 2.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true ]
+}
+
+[sub_resource type="Animation" id=6]
+length = 1.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false, true, false, true, false, true, false, true, false, true, false, true, false, true ]
+}
+
+[sub_resource type="Animation" id=7]
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ false, true, false, true ]
+}
+
+[sub_resource type="ShaderMaterial" id=8]
+shader = ExtResource( 12 )
+shader_param/shake_power = 0.02
+shader_param/shake_rate = 5.5
+shader_param/n_stripes = 80.0
+shader_param/chromatic_aberration = 0.01
+shader_param/rgb_opacity = 0.8
+
+[node name="Player" type="KinematicBody2D"]
+collision_mask = 2
+script = ExtResource( 2 )
+min_jump_height = 5.0
+time_to_jump_apex = 0.4
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+hframes = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource( 1 )
+
+[node name="GlitchBlockDetector" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GlitchBlockDetector"]
+shape = SubResource( 2 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="GlitchBlockDetector"]
+shape = SubResource( 3 )
+
+[node name="Hurtbox" type="Area2D" parent="."]
+script = ExtResource( 13 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+visible = false
+shape = SubResource( 4 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/die = SubResource( 5 )
+anims/hit = SubResource( 6 )
+anims/hit_then_respawn = SubResource( 7 )
+
+[node name="InputHandler" type="Node" parent="."]
+script = ExtResource( 9 )
+
+[node name="PlayerFSM" type="Node" parent="."]
+script = ExtResource( 8 )
+
+[node name="Idle" type="Node" parent="PlayerFSM"]
+script = ExtResource( 4 )
+
+[node name="Walk" type="Node" parent="PlayerFSM"]
+script = ExtResource( 5 )
+
+[node name="Jump" type="Node" parent="PlayerFSM"]
+script = ExtResource( 7 )
+
+[node name="HappyJumpSFX" type="AudioStreamPlayer" parent="PlayerFSM/Jump"]
+stream = ExtResource( 14 )
+volume_db = -80.0
+bus = "SFX"
+
+[node name="NotHappyJumpSFX" type="AudioStreamPlayer" parent="PlayerFSM/Jump"]
+stream = ExtResource( 15 )
+bus = "SFX"
+
+[node name="Air" type="Node" parent="PlayerFSM"]
+script = ExtResource( 6 )
+
+[node name="Wallslide" type="Node" parent="PlayerFSM"]
+script = ExtResource( 3 )
+
+[node name="Walljump" type="Node" parent="PlayerFSM"]
+script = ExtResource( 10 )
+
+[node name="Freeze" type="Node" parent="PlayerFSM"]
+script = ExtResource( 11 )
+
+[node name="GlitchShader" type="Node2D" parent="."]
+
+[node name="GlitchShader" type="ColorRect" parent="GlitchShader"]
+visible = false
+material = SubResource( 8 )
+margin_left = -4.0
+margin_top = -5.0
+margin_right = 4.0
+margin_bottom = 5.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="GlitchShaderTimer" type="Timer" parent="GlitchShader"]
+one_shot = true
+autostart = true
+
+[node name="GlitchDuration" type="Timer" parent="GlitchShader"]
+one_shot = true
+
+[node name="SFX" type="Node2D" parent="."]
+
+[node name="Death" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource( 16 )
+bus = "SFX"
+
+[node name="Hit" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource( 17 )
+bus = "SFX"
+
+[node name="Heal" type="AudioStreamPlayer" parent="SFX"]
+stream = ExtResource( 18 )
+bus = "SFX"
+
+[connection signal="body_entered" from="GlitchBlockDetector" to="." method="_on_GlitchBlockDetector_body_entered"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_finished"]
+[connection signal="timeout" from="GlitchShader/GlitchShaderTimer" to="." method="_on_GlitchShaderTimer_timeout"]
+[connection signal="timeout" from="GlitchShader/GlitchDuration" to="." method="_on_GlitchDuration_timeout"]

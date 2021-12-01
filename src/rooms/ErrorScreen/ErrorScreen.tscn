@@ -1,0 +1,69 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://src/rooms/Room.tscn" type="PackedScene" id=1]
+[ext_resource path="res://src/rooms/ErrorScreen/ErrorScreen.gd" type="Script" id=2]
+[ext_resource path="res://assets/fonts/cnr.otf" type="DynamicFontData" id=3]
+[ext_resource path="res://src/gui/ScrollingText.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/rooms/ErrorScreen/Display.gd" type="Script" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+size = 8
+use_mipmaps = true
+use_filter = true
+font_data = ExtResource( 3 )
+
+[node name="ErrorScreen" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+room_name = "ErrorScreen"
+
+[node name="Display" type="Control" parent="." index="7"]
+margin_right = 320.0
+margin_bottom = 180.0
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BSOD" type="ColorRect" parent="Display" index="0"]
+margin_right = 320.0
+margin_bottom = 180.0
+color = Color( 0, 0.0509804, 0.835294, 1 )
+
+[node name="Label" type="RichTextLabel" parent="Display/BSOD" index="0"]
+margin_left = 10.0
+margin_top = 8.0
+margin_right = 312.0
+margin_bottom = 172.0
+custom_fonts/normal_font = SubResource( 1 )
+text = "A problem has been detected and this application has been shut down to prevent damage to your computer.
+
+The problem seems to be caused be the follwing file: icon.png
+
+Check to make sure any new hardware or software is properly installed. If problems continue, disable or remove any newly installed hardware or software.
+ 
+Please wait while the application restarts.
+
+Technical information:
+
+*** STOP: 0x87539319 (GDScript.lang.FileNotFoundException
+		at res://icon.png)"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Console" type="ColorRect" parent="Display" index="1"]
+margin_right = 320.0
+margin_bottom = 180.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="ScrollingText" parent="Display/Console" index="0" instance=ExtResource( 4 )]
+margin_left = 8.0
+margin_top = 8.0
+margin_right = 312.0
+margin_bottom = 172.0
+
+[node name="Timer" type="Timer" parent="Display" index="2"]
+one_shot = true
+
+[connection signal="queue_emptied" from="Display/Console/ScrollingText" to="Display" method="_on_ScrollingText_queue_emptied"]
+[connection signal="timeout" from="Display/Timer" to="Display" method="_on_Timer_timeout"]
